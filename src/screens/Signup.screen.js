@@ -1,40 +1,34 @@
-import React, { useState } from "react";
-import { StyleSheet, SafeAreaView, View } from "react-native";
-import { Text, Input, Button } from "react-native-elements";
+import React, { useContext, useCallback, useEffect } from "react";
+import { StyleSheet, SafeAreaView } from "react-native";
+import { useFocusEffect } from '@react-navigation/native';
 
-import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
+import { AuthForm } from "../components/AuthForm.component";
+import { LinkText } from "../components/LinkText.component";
+
+import { AuthContext } from "../context/Auth.context";
 
 export const SignupScreen = ({ navigation }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { signup, isLoading, error, clearError } = useContext(AuthContext);
+  
+  useFocusEffect(
+    useCallback(() => {
+      clearError();
+    }, [])
+  );
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text h1 style={styles.title}>Sign Up</Text>
-      <Input
-        placeholder="E-mail"
-        leftIcon={<AntDesign name="mail" size={24} color="black" />}
-        autoCapitalize="none"
-        autoCorrect={false}
-        value={email}
-        onChangeText={setEmail}
+      <AuthForm
+        headerText="Sign Up"
+        submitButtonText="Sign Up"
+        onSubmit={signup}
+        isLoading={isLoading}
+        error={error}
       />
-      <Input
-        placeholder="Password"
-        leftIcon={
-          <MaterialCommunityIcons
-            name="form-textbox-password"
-            size={24}
-            color="black"
-          />
-        }
-        secureTextEntry
-        autoCapitalize="none"
-        autoCorrect={false}
-        value={password}
-        onChangeText={setPassword}
+      <LinkText
+        onPress={() => navigation.navigate("Signin")}
+        text="Already have an account? Sing in instead."
       />
-      <Button style={styles.button} title="Sign Up" onPress={() => null} />
     </SafeAreaView>
   );
 };
@@ -43,14 +37,6 @@ const styles = StyleSheet.create({
   container: {
     margin: 10,
     flex: 1,
-    justifyContent: "center"
+    justifyContent: "center",
   },
-  title: {
-    marginTop: -100,
-    marginBottom: 30,
-    marginHorizontal: 15
-  },
-  button: {
-    margin: 15
-  }
 });
