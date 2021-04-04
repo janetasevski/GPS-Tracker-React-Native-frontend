@@ -11,8 +11,8 @@ export const AuthContextProvider = ({ children }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!token) tryLocalSignin();
-  }, []);
+    !token && tryLocalSignin()
+  }, [token]);
 
   const tryLocalSignin = async () => {
     setTokenIsLoading(true);
@@ -28,7 +28,7 @@ export const AuthContextProvider = ({ children }) => {
       console.log(error);
     }
   };
-  
+
   const removeTokenFromStorage = async () => {
     try {
       await AsyncStorage.removeItem("token");
